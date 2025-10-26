@@ -3,12 +3,11 @@ package com.gaming.player_service.domain.service;
 import com.gaming.player_service.domain.model.Player;
 import com.gaming.player_service.domain.model.PlayerStats;
 import com.gaming.player_service.domain.model.PlayerStatus;
-import com.gaming.player_service.domain.port.*;
 import com.gaming.player_service.domain.port.input.PlayerCommands;
 import com.gaming.player_service.domain.port.input.PlayerQueries;
-import com.gaming.player_service.domain.port.output.EventPublisher;
 import com.gaming.player_service.domain.port.output.PlayerRepository;
 import com.gaming.player_service.domain.port.output.PlayerStatsRepository;
+import com.gaming.player_service.domain.port.output.EventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,11 +25,11 @@ public class PlayerService implements PlayerCommands, PlayerQueries {
     private final PlayerStatsRepository playerStatsRepository;
     private final EventPublisher eventPublisher;
 
-    // ==================== COMMANDOS ====================
+    // ==================== COMANDOS ====================
 
     @Override
     public Player createPlayer(String username, String email) {
-        log.info("Creating player with username: {}", username);
+        log.info("Creando player with username: {}", username);
 
         // Validaciones
         if (playerRepository.existsByUsername(username)) {
