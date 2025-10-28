@@ -185,4 +185,5 @@ public class PlayerService implements PlayerCommands, PlayerQueries {
         log.debug("Fetching leaderboard with limit: {}", limit);
         return playerStatsRepository.findTopByRating(limit);
     }
+
 }
