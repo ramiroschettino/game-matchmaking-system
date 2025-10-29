@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class MatchCompletedEvent extends MatchEvent {
 
-    private String winnerTeam;  
+    private String winnerTeam;
     private Integer durationSeconds;
 
     @Override
