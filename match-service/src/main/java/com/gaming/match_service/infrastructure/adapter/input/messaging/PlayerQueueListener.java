@@ -32,6 +32,8 @@ public class PlayerQueueListener {
         }
     }
 
+    // ⚠️ COMENTAR O BORRAR ESTE MÉTODO (está causando el problema)
+    /*
     @RabbitListener(queues = RabbitMQConfig.MATCHMAKING_QUEUE)
     public void handlePlayerLeftQueue(PlayerLeftQueueEvent event) {
         log.info("RABBITMQ: Received PlayerLeftQueue event - Player: {}", event.getPlayerId());
@@ -42,4 +44,5 @@ public class PlayerQueueListener {
             log.error("Error processing PlayerLeftQueue event", e);
         }
     }
+    */
 }

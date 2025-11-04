@@ -38,7 +38,7 @@ public class Match {
     private LocalDateTime completedAt;
 
     @Builder.Default
-    private Integer version = 0;  // Para event sourcing
+    private Integer version = 0;  //event sourcing
 
     public static Match fromEvents(List<MatchEvent> events) {
         Match match = new Match();

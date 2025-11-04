@@ -133,7 +133,7 @@ Match Service publica:
 
 ### **2. Clonar**
 ```bash
-git clone https://github.com/TU_USUARIO/game-matchmaking-system.git
+git clone https://github.com/ramiroschettino/game-matchmaking-system.git
 cd game-matchmaking-system
 ```
 

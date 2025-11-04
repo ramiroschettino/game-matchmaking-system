@@ -25,7 +25,7 @@ public abstract class MatchEvent {
 
     private LocalDateTime timestamp;
 
-    private Integer version;  // Para ordenar eventos
+    private Integer version;
 
-    public abstract void apply(Match match);  // Cada evento aplica cambios al Match
+    public abstract void apply(Match match);
 }

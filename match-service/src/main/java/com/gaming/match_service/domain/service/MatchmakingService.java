@@ -25,7 +25,7 @@ public class MatchmakingService {
     private final Map<String, PlayerInQueue> playersInQueue = new ConcurrentHashMap<>();
 
     private static final int TEAM_SIZE = 5;
-    private static final int RATING_THRESHOLD = 100;  // Diferencia máxima de rating permitida
+    private static final int RATING_THRESHOLD = 100;
 
     public void addPlayerToQueue(String playerId, String username, int rating) {
         log.info("Adding player {} to matchmaking queue with rating {}", playerId, rating);

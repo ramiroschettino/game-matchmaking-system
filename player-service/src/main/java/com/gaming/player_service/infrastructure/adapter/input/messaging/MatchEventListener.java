@@ -1,6 +1,7 @@
 package com.gaming.player_service.infrastructure.adapter.input.messaging;
 
 import com.gaming.player_service.domain.port.input.PlayerCommands;
+import com.gaming.player_service.domain.port.output.PlayerStatsRepository;
 import com.gaming.player_service.infrastructure.adapter.input.messaging.dto.MatchCompletedEvent;
 import com.gaming.player_service.infrastructure.adapter.input.messaging.dto.MatchFoundEvent;
 import com.gaming.player_service.infrastructure.config.RabbitMQConfig;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 public class MatchEventListener {
 
     private final PlayerCommands playerCommands;
+    private final PlayerStatsRepository playerStatsRepository;
 
     @RabbitListener(queues = RabbitMQConfig.MATCH_FOUND_QUEUE)
     public void handleMatchFound(MatchFoundEvent event) {
@@ -39,10 +41,9 @@ public class MatchEventListener {
                 event.getMatchId(), event.getWinnerTeam());
 
         try {
-            // Determinar ganadores y perdedores
+
             boolean teamAWon = "TEAM_A".equals(event.getWinnerTeam());
 
-            // Actualizar ratings (ejemplo simplificado: +25 ganadores, -20 perdedores)
             for (String playerId : event.getTeamAPlayers()) {
                 int ratingChange = teamAWon ? 25 : -20;
                 updatePlayerAfterMatch(playerId, ratingChange, teamAWon);
@@ -61,20 +62,27 @@ public class MatchEventListener {
 
     private void updatePlayerAfterMatch(String playerId, int ratingChange, boolean won) {
         try {
-            // Obtener player actual
-            var player = playerCommands.getPlayerById(playerId)
-                    .orElseThrow(() -> new IllegalArgumentException("Player not found: " + playerId));
 
-            // Calcular nuevo rating
+            var playerOpt = playerCommands.getPlayerById(playerId);
+
+            if (playerOpt.isEmpty()) {
+                log.error("Player not found: {}", playerId);
+                return;
+            }
+
+            var player = playerOpt.get();
+
+
             int newRating = Math.max(0, player.getRating() + ratingChange);
 
-            // Actualizar rating
+
             playerCommands.updateRating(playerId, newRating);
 
-            // Volver a IDLE
+            playerStatsRepository.updateStats(playerId, won, newRating);
+
             playerCommands.updatePlayerStatus(playerId, "IDLE");
 
-            log.info("Player {} updated: rating {} -> {}, status -> IDLE",
+            log.info("Player {} updated: rating {} -> {}, wins/losses updated, status -> IDLE",
                     playerId, player.getRating(), newRating);
         } catch (Exception e) {
             log.error("Error updating player {} after match", playerId, e);
