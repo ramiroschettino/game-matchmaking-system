@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: player-service
+  namespace: game-matchmaking
+  labels:
+    app: player-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: player-service
+  template:
+    metadata:
+      labels:
+        app: player-service
+    spec:
+      containers:
+      - name: player-service
+        image: game-matchmaking/player-service:1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+        envFrom:
+        - configMapRef:
+            name: player-service-config
+        env:
+        - name: SPRING_RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-secret
+              key: rabbitmq-password
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: player-service
+  namespace: game-matchmaking
+  labels:
+    app: player-service
+spec:
+  type: ClusterIP
+  selector:
+    app: player-service
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    name: http
