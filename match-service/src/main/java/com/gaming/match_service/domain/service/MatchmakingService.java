@@ -142,7 +142,7 @@ public class MatchmakingService {
         return playersInQueue.size();
     }
 
-    // Inner class para representar jugador en cola
+
     private static class PlayerInQueue {
         private final String playerId;
         private final String username;
