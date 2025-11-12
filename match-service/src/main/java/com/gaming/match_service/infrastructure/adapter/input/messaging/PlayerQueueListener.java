@@ -32,7 +32,6 @@ public class PlayerQueueListener {
         }
     }
 
-    // ⚠️ COMENTAR O BORRAR ESTE MÉTODO (está causando el problema)
     /*
     @RabbitListener(queues = RabbitMQConfig.MATCHMAKING_QUEUE)
     public void handlePlayerLeftQueue(PlayerLeftQueueEvent event) {
